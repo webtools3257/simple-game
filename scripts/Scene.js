@@ -13,7 +13,7 @@ export class MainScene extends Phaser.Scene {
 		url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
 		this.load.plugin('rexvirtualjoystickplugin', url, true);
 
-		this.load.spritesheet("player", `${base_link}/assets/player/spritesheets/player.png`, {
+		this.load.spritesheet("player", `${base_link}/player.png`, {
 			frameWidth: 111.5,
 			frameHeight: 120
 		})
