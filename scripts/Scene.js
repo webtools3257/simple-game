@@ -1,4 +1,4 @@
-const base_link = 
+const base_link = "https://webtools3257.github.io/simple-game-assets"
 import { Player } from "./Player.js"
 import { Zombie } from "./Character.js"
 import { Bullet } from "./Objects.js"
