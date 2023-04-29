@@ -1,4 +1,4 @@
-const base_link = window.location.origin
+const base_link = 
 import { Player } from "./Player.js"
 import { Zombie } from "./Character.js"
 import { Bullet } from "./Objects.js"
@@ -18,15 +18,15 @@ export class MainScene extends Phaser.Scene {
 			frameHeight: 120
 		})
 
-		this.load.spritesheet("zombie", `${base_link}/assets/zombie/spritesheets/zombie.png`, {
+		this.load.spritesheet("zombie", `${base_link}/zombie.png`, {
 			frameWidth: 128,
 			frameHeight: 130
 		})
 
-		this.load.audio("gun", `${base_link}/assets/audio/gun/gun.mp3`)
-		this.load.audio("main_sound", `${base_link}/assets/audio/theme/main_theme.mp3`)
-		this.load.image("bullet", `${base_link}/assets/bullets/bullet_1.png`)
-		this.load.image("posion", `${base_link}/assets/poison/posion.png`)
+		this.load.audio("gun", `${base_link}/gun.mp3`)
+		this.load.audio("main_sound", `${base_link}/main_theme.mp3`)
+		this.load.image("bullet", `${base_link}/bullet_1.png`)
+		this.load.image("posion", `${base_link}/posion.png`)
 	}
 
 	create() {
