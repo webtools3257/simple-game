@@ -1,6 +1,7 @@
 import {
 	MainScene,
-	GameOverScene
+	GameOverScene,
+	WinScene
 } from "./Scene.js"
 const config = {
 	type: Phaser.AUTO,
@@ -11,6 +12,6 @@ const config = {
 	physics: {
 		default: 'arcade'
 	},
-	scene:[MainScene,GameOverScene]
+	scene:[MainScene,GameOverScene,WinScene]
 };
 const game = new Phaser.Game(config);

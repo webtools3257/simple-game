@@ -4,5 +4,7 @@ export class Actor extends Phaser.Physics.Arcade.Sprite {
 		this.configs = configs
 		configs.scene.add.existing(this);
 		configs.scene.physics.add.existing(this);
+		this.setCollideWorldBounds(true);
+		this.setGravityY(1000);
 	}
 }

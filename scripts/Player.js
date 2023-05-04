@@ -5,8 +5,8 @@ export class Player extends Actor {
 		super({
 			scene: scene,
 			pos: {
-				x: 100,
-				y: 100,
+				x: 0,
+				y: 0,
 			},
 			texture: "player"
 		})
@@ -33,8 +33,8 @@ export class Player extends Actor {
 			repeat: 0
 		});
 		this.scene = scene
-		this.scaleX=-1
-		this.s = 1
+		this.scaleX=-2
+		this.s = 2
 		this.isMove = null
 		this.hp = 100
 		this.body.setSize(10, 40)
@@ -56,8 +56,8 @@ export class Player extends Actor {
 		this.onMove()
 		//this.hpDisplay.setPosition(this.x, this.y-60)
 		this.isMove = "right"
-		this.scaleX = 1
-		this.s = 1
+		this.scaleX = 2
+		this.s = 2
 		this.play("run")
 		this.setVelocityX(100)
 	}
@@ -65,8 +65,8 @@ export class Player extends Actor {
 	moveToLeft() {
 		this.onMove()
 		this.isMove="left"
-		this.scaleX = -1
-		this.s = -1
+		this.scaleX = -2
+		this.s = -2
 		this.play("run")
 		this.setVelocityX(-100)
 	}

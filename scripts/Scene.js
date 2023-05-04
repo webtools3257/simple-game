@@ -27,12 +27,32 @@ export class MainScene extends Phaser.Scene {
 		this.load.audio("main_sound", `${base_link}/main_theme.mp3`)
 		this.load.image("bullet", `${base_link}/bullet_1.png`)
 		this.load.image("posion", `${base_link}/posion.png`)
+		this.load.image("bg", `${window.location.origin}/D6fip.png`)
 	}
 
 	create() {
-
+		//this.physics.world.bounds.x = -Infinity;        
+		this.physics.world.bounds.width = Infinity;
+		//this.physics.world.bounds.y = -Infinity;
+		//this.physics.world.setBounds(0, 0, window.innerWidth, window.outerHeight);
+		var windowWidth = window.innerWidth;
+		var widnowHeight = window.innerHeight;
 		this.main_sound = this.sound.add("main_sound")
 		this.main_sound.play()
+		this.camera.bounds.x = -Infinity;
+
+		this.camera.main.bounds.y = -Infinity;
+
+		//this.camera.main.bounds.width = Infinity;
+
+		//this.camera.main.bounds.height = Infinity;
+		//let bg = this.add.sprite(0, 0, "bg")
+		//bg.setDisplaySize(window.innerWidth, window.innerHeight + 440)
+		let image = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bg')
+		let scaleX = this.cameras.main.width / image.width
+		let scaleY = this.cameras.main.height / image.height
+		let scale = Math.max(scaleX, scaleY)
+		image.setScale(scale).setScrollFactor(0)
 		//	this.scale.toggleFullscreen()
 		this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
 			x: 100,
@@ -44,8 +64,8 @@ export class MainScene extends Phaser.Scene {
 			// forceMin: 16,
 			enable: true
 		})
-		this.joyStick.on("update", this.joyStickUpdate.bind(this))
 
+		this.joyStick.on("update", this.joyStickUpdate.bind(this))
 		this.attack_btn = this.plugins.get('rexvirtualjoystickplugin').add(this, {
 			x: window.innerWidth - 100,
 			y: window.innerHeight - 100,
@@ -54,24 +74,23 @@ export class MainScene extends Phaser.Scene {
 		})
 		this.attack_btn.on('pointerdown', this.attack_btn_click.bind(this))
 		this.player = new Player(this)
-		//player.play("run")
-		//let plane = this.add.sprite(100, 200, "player");
-		//plane.play("fly");
 		this.sfx = this.sound.add("gun")
 		const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 		const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 		const loadingText = this.add.text(screenCenterX, screenCenterY, 'Loading: 0%').setOrigin(0.5);
-
-		//new Button(this, 650, 100, "attack", this.attack.bind(this))
 		this.bullets = this.add.group()
 		this.zombies = this.add.group()
 		this.posion_clouds = this.add.group()
 		this.physics.add.overlap(this.zombies, this.bullets, function(zombie, bullet) {
-			zombie.hp -= 5
+			zombie.hp -= 10
 			if (zombie.hp <= 0) {
 				zombie.hpDisplay.destroy()
 				zombie.destroy()
 				zombie.destroyAll()
+				this.zombie_count -= 1
+				if (this.zombie_count <= 0) {
+					this.scene.start("win")
+				}
 			}
 			bullet.destroy()
 		}, null, this)
@@ -81,29 +100,44 @@ export class MainScene extends Phaser.Scene {
 			cloud.destroy()
 		}, null, this)
 
-		for (var i = 0; i < 10; i++) {
+		this.zombie_count = 0
+		for (var i = 0; i < 5; i++) {
 			this.zombies.add(new Zombie(this, 300 + (i * 400), 100))
 			this.zombies.add(new Zombie(this, -300 + (-i * 400), 100))
+			this.zombie_count += 2
 		}
-			//this.scene.add("gameover")
 		this.cameras.main.startFollow(this.player);
-		this.input.keyboard.on('keydown-' + 'A', function(event) {
-				if (this.player.isMove != "left")
-					this.player.moveToLeft()
+		this.input.keyboard.on('keydown-' + 'A', (function(event) {
+			if (this.player.isMove != "left")
+				this.player.moveToLeft()
+		}).bind(this));
+
+		this.input.keyboard.on('keydown-' + 'D', (function(event) {
+			if (this.player.isMove != "right")
+				this.player.moveToRight()
+		}).bind(this));
+
+		this.input.keyboard.on('keydown-' + 'L', (function(event) {
+			this.attack()
+		}).bind(this));
+
+		this.input.keyboard.on('keyup-' + 'A', (function(event) {
+			this.player.idle(0)
+		}).bind(this));
+
+		this.input.keyboard.on('keyup-' + 'D', (function(event) {
+			this.player.idle(0)
+		}).bind(this));
+
+		this.input.keyboard.on('keydown', function(event) {
+			let key = event.key
+			switch (key) {
+				case "a":
+
+			}
+
 		});
-		
-		this.input.keyboard.on('keydown-' + 'D', function(event) {
-				if (this.player.isMove != "right")
-					this.player.moveToRight()
-		});
-		
-		this.input.keyboard.on('keyup-' + 'A', function(event) {
-				this.player.idle(0)
-		});
-		
-		this.input.keyboard.on('keyup-' + 'D', function(event) {
-				this.player.idle(0)
-		});
+
 	}
 
 	attack_btn_click() {
@@ -157,5 +191,21 @@ export class GameOverScene extends Phaser.Scene {
 			color: '#fff'
 		}).setOrigin(0.5);
 
+	}
+}
+
+export class WinScene extends Phaser.Scene {
+	constructor() {
+		super("win")
+	}
+
+	create() {
+		const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+		const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+		const loadingText = this.add.text(screenCenterX, screenCenterY, 'You Win', {
+			fontFamily: 'Arial',
+			fontSize: '50px',
+			color: '#fff'
+		}).setOrigin(0.5);
 	}
 }
